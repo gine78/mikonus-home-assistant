@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2 Beta
+
+- Lower the declared Home Assistant Core minimum to **2026.1.0**, allowing earlier 2026 installations to try the beta.
+- Product behavior is unchanged from 0.2.1.
+- Full runtime acceptance remains on **Core 2026.9.0**; earlier 2026 releases have not been locally validated. Please report compatibility issues with your Core and frontend versions.
+
+The known early-restart limitation remains: refresh the dashboard once after Home Assistant has finished starting if the custom card has not loaded.
+
 ## 0.2.1 Beta
 
 - Frontend card is now bundled and loaded automatically with the integration.
