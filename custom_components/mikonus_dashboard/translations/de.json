@@ -1,0 +1,15 @@
+{
+  "title": "Mikonus Dashboard",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Mikonus Dashboard",
+        "description": "Speichert aus Mikonus veröffentlichte Dashboards in dieser Home-Assistant-Instanz. Es wird keine zusätzliche Verbindung und kein weiteres Konto benötigt. Zum Veröffentlichen dient das vorhandene Home-Assistant-Zugriffstoken eines Administrators."
+      }
+    },
+    "abort": {
+      "already_configured": "Mikonus Dashboard ist bereits eingerichtet.",
+      "single_instance_allowed": "Mikonus Dashboard ist bereits eingerichtet."
+    }
+  }
+}

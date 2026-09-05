@@ -1,0 +1,2 @@
+# Preserve the generated bundle byte-for-byte, including upstream shader strings.
+custom_components/mikonus_dashboard/frontend/mikonus-3d-card.js -whitespace linguist-generated=true

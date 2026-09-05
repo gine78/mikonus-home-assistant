@@ -1,0 +1,19 @@
+{
+  "domain": "mikonus_dashboard",
+  "name": "Mikonus Dashboard",
+  "codeowners": [
+    "@gine78"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "http",
+    "websocket_api"
+  ],
+  "documentation": "https://github.com/gine78/mikonus-home-assistant",
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/gine78/mikonus-home-assistant/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.2.0"
+}

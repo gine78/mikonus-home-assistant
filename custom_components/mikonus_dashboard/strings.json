@@ -1,0 +1,15 @@
+{
+  "title": "Mikonus Dashboard",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Mikonus Dashboard",
+        "description": "Store dashboards published from Mikonus in this Home Assistant instance. No additional connection or account is required. Publishing uses your existing Home Assistant administrator access token."
+      }
+    },
+    "abort": {
+      "already_configured": "Mikonus Dashboard is already configured.",
+      "single_instance_allowed": "Mikonus Dashboard is already configured."
+    }
+  }
+}
