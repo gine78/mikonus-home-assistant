@@ -236,6 +236,10 @@ class SceneStore:
                 ) from err
             self.scenes = candidate["scenes"]
             if updated:
+                self.hass.bus.async_fire(
+                    "mikonus_dashboard_published",
+                    {"sceneId": scene_id, "revision": record["revision"]},
+                )
                 self._notify(
                     {
                         "type": "updated",

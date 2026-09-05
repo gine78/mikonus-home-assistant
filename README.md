@@ -1,6 +1,6 @@
 # Mikonus Dashboard for Home Assistant
 
-**Beta — version 0.2.0.**
+**Beta — version 0.2.1.**
 
 Mikonus publishes an interactive multi-floor 3D dashboard to Home Assistant.
 This integration stores published scenes and connects the Mikonus dashboard
@@ -20,7 +20,7 @@ Available controls depend on each entity's capabilities and services. Unsupporte
 capabilities are unavailable. This beta accepts Dashboard Scene schema 2 and
 publish contract 1. Custom asset uploads and arbitrary external asset URLs are
 not supported. Tested with Home Assistant Core **2026.9.0** and a WebGL-capable
-Chromium browser. Other versions and physical devices have not been fully tested.
+Chromium or WebKit browser. Other versions and physical devices have not been fully tested.
 
 ## Install with HACS
 
@@ -30,41 +30,32 @@ Chromium browser. Other versions and physical devices have not been fully tested
    **Integration** as the type. Add the repository.
 4. Find **Mikonus Dashboard** and download it. For the beta release, enable
    **Show beta versions** in its download/redownload dialog if necessary and
-   select **v0.2.0**.
+   select **v0.2.1**.
 5. Restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Mikonus Dashboard**
    and submit the setup form. No additional account is required by the integration.
 
 This is a HACS custom repository; it is not included in the default HACS list.
 
-## Register the dashboard module
+## Automatic frontend
 
-Version 0.2.0 packages the frontend inside the integration but does not serve or
-register it automatically. Using your Home Assistant file editor or file access:
+The integration bundles, serves and loads the card automatically. Fresh installs
+need no `/config/www` copy and no manual Lovelace resource registration.
+Mikonus is a normal custom card for Masonry, Sections and card-compatible Panel
+layouts; place it in any of your Home Assistant dashboards.
 
-1. Create the `www` directory inside your Home Assistant configuration directory
-   if it does not exist.
-2. Copy `custom_components/mikonus_dashboard/frontend/mikonus-3d-card.js` to
-   `www/mikonus-3d-card.js` inside that same configuration directory.
-3. If you just created `www`, restart Home Assistant again.
-4. Enable **Advanced mode** in your Home Assistant user profile. Open
-   **Settings → Dashboards → menu → Resources → Add resource**.
-5. Set the URL to `/local/mikonus-3d-card.js?v=0.2.0` and the resource type to
-   **JavaScript Module**. Save, then reload the browser.
+## Updating from 0.2.0
 
-For dashboards with YAML-managed resources, use:
+Update to **v0.2.1** in HACS and restart Home Assistant. After the successful
+update, remove the old manually added Mikonus Lovelace resource
+(`/local/mikonus-3d-card.js`, including any version suffix) through the Resources
+UI or your own YAML. You can then delete `/config/www/mikonus-3d-card.js`.
+Refresh the dashboard once to use the new bundled card.
 
-```yaml
-lovelace:
-  resource_mode: yaml
-  resources:
-    - url: /local/mikonus-3d-card.js?v=0.2.0
-      type: module
-```
-
-After future HACS updates, repeat the module copy and change the URL version
-suffix to the installed version. HACS updates the integration's bundled file;
-it does not update your manually copied `www` file.
+Both old and new modules can load without a duplicate custom-element error.
+The first loaded version remains active for that browser document, so removing
+the old resource and refreshing ensures the new recovery behavior is in use.
+The integration does not edit user-managed Lovelace resources.
 
 ## Publish from Mikonus
 
@@ -101,10 +92,22 @@ Published scene changes appear live. If no scene has been published, publish one
 before expecting the 3D dashboard to appear. Removing the integration deletes its
 stored scenes; reloading it preserves them.
 
+## Known beta limitation — restart and wall displays
+
+In rare cases, when a dashboard reconnects extremely early during a Home
+Assistant restart, the Mikonus custom element may not be loaded by the current
+browser session. **Refresh the dashboard once after Home Assistant has finished
+starting.** This also applies to continuously open tablet and wall displays.
+Kiosk or wall-display setups that already reload after an HA restart also avoid
+this edge case; no particular third-party solution is required.
+
+Once the card module has loaded, temporary integration/startup/WebSocket failures
+recover automatically. The last working scene stays visible during an interruption.
+
 ## Troubleshooting and feedback
 
-- **Custom element does not exist:** check the file copy and JavaScript Module
-  resource, then reload the browser.
+- **Custom element does not exist:** wait until Home Assistant has finished
+  starting, then refresh the dashboard once.
 - **Blank or unavailable renderer:** use a browser with working WebGL support.
 - **No scene / multiple scenes:** publish a scene or set the intended `scene_id`.
 - **Control unavailable:** verify that the entity is available and supports the

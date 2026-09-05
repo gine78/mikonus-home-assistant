@@ -9,7 +9,7 @@ from .models import ContractError
 
 
 def register_commands(hass):
-    for command in (scene_list, scene_get, scene_subscribe):
+    for command in (scene_list, scene_get, scene_subscribe, scene_watch):
         websocket_api.async_register_command(hass, command)
 
 
@@ -99,3 +99,34 @@ def scene_subscribe(hass, connection, msg):
         )
     except ContractError as err:
         connection.send_error(msg["id"], err.code, str(err))
+
+
+@websocket_api.websocket_command(
+    {vol.Required("type"): "mikonus_dashboard/scene/watch"}
+)
+@callback
+def scene_watch(hass, connection, msg):
+    """Observe readiness/publication even before an entry or selected scene exists.
+
+    This authenticated command deliberately carries only lifecycle/metadata, so
+    regular dashboard users need no admin-only event-bus subscription.
+    """
+
+    @callback
+    def ready(_event):
+        connection.send_event(msg["id"], {"type": "ready"})
+
+    @callback
+    def published(event):
+        connection.send_event(msg["id"], {"type": "updated", **event.data})
+
+    remove_ready = hass.bus.async_listen("mikonus_dashboard_ready", ready)
+    remove_publish = hass.bus.async_listen("mikonus_dashboard_published", published)
+
+    @callback
+    def unsubscribe():
+        remove_ready()
+        remove_publish()
+
+    connection.subscriptions[msg["id"]] = unsubscribe
+    connection.send_result(msg["id"])
