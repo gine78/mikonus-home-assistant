@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.3.0 Beta
+
+- Register **Mikonus 3D** as a selectable Lovelace card with a graphical,
+  English/German `ha-form` editor.
+- Add per-card appearance, camera and dashboard-UI settings without adding them
+  to Dashboard Scene v2 or duplicating a scene.
+- Apply presentation-only edits live to the existing viewer. Ambient light,
+  shadows, camera controls, floor selector, quick controls and device markers no
+  longer require a scene reload or mesh rebuild.
+- Add modern Sections/Grid defaults (`full` width, seven preferred rows, six
+  minimum columns/rows) while retaining the canonical renderer's existing
+  `ResizeObserver`, camera fit and render-on-demand lifecycle.
+- Preserve every previous default when the new fields are absent. Existing
+  published and `scene: reference` card configurations remain valid.
+
+Update to 0.3.0 in HACS, restart Home Assistant and hard-refresh the dashboard
+once so the browser loads the new frontend bundle. The existing Config Entry,
+published scenes, bindings and Lovelace card YAML remain unchanged; no scene
+republish or card recreation is required.
+
 ## 0.2.3 Beta
 
 - Follow the active Home Assistant light/dark mode, including live theme changes, readable summary text and matching shared renderer controls.

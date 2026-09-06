@@ -1,6 +1,6 @@
 # Mikonus Dashboard for Home Assistant
 
-**Beta — version 0.2.3.**
+**Beta — version 0.3.0.**
 
 Mikonus publishes an interactive multi-floor 3D dashboard to Home Assistant.
 This integration stores published scenes and connects the Mikonus dashboard
@@ -15,6 +15,9 @@ renderer to live Home Assistant entity states and controls.
 - Live entity updates using the existing Home Assistant frontend connection.
 - Authenticated scene publishing, persistent storage and live scene updates.
 - Revision conflict detection, retry receipts and reconnect recovery.
+- **Mikonus 3D** in the normal Lovelace card picker with a graphical editor.
+- Per-card appearance, camera and dashboard-UI settings with live preview.
+- Responsive full-width defaults for Sections/Grid dashboards.
 
 Available controls depend on each entity's capabilities and services. Unsupported
 capabilities are unavailable. This beta accepts Dashboard Scene schema 2 and
@@ -32,7 +35,7 @@ Chromium or WebKit browser. Other versions and physical devices have not been fu
    **Integration** as the type. Add the repository.
 4. Find **Mikonus Dashboard** and download it. For the beta release, enable
    **Show beta versions** in its download/redownload dialog if necessary and
-   select **v0.2.3**.
+   select **v0.3.0**.
 5. Restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Mikonus Dashboard**
    and submit the setup form. No additional account is required by the integration.
@@ -46,20 +49,27 @@ need no `/config/www` copy and no manual Lovelace resource registration.
 Mikonus is a normal custom card for Masonry, Sections and card-compatible Panel
 layouts; place it in any of your Home Assistant dashboards.
 
-## Appearance
+## Appearance and card editor
 
 The card follows Home Assistant’s active light/dark mode, including changes while
 the dashboard is open. The floor-selection header is transparent over the scene;
 the floor buttons retain their own backgrounds. Card resizing keeps the viewer
-mounted. No extra theme configuration is required.
+mounted. Add or edit **Mikonus 3D** to configure ambient light, shadows, theme,
+automatic brightness, camera lock/rotation/zoom/pan, floor controls, quick
+controls and device markers. These settings apply only to that card instance and
+do not modify or duplicate the published Dashboard Scene.
 
-## Updating from 0.2.0
+## Updating an existing installation
 
-Update to **v0.2.3** in HACS and restart Home Assistant. After the successful
-update, remove the old manually added Mikonus Lovelace resource
+Update to **v0.3.0** in HACS and restart Home Assistant. Existing Config Entries,
+published scenes, bindings and Lovelace card YAML are retained. Hard-refresh the
+dashboard once so it loads the new frontend bundle. No scene republish or card
+recreation is required.
+
+Only installations upgraded from 0.2.0 that still have the old manually added
+Mikonus Lovelace resource should remove it
 (`/local/mikonus-3d-card.js`, including any version suffix) through the Resources
 UI or your own YAML. You can then delete `/config/www/mikonus-3d-card.js`.
-Refresh the dashboard once to use the new bundled card.
 
 Both old and new modules can load without a duplicate custom-element error.
 The first loaded version remains active for that browser document, so removing
@@ -81,7 +91,8 @@ Assistant publisher is absent, an app version with that publisher is required.
 
 ## Add the card
 
-Edit a Home Assistant dashboard, add a **Manual** card and enter:
+Edit a Home Assistant dashboard, choose **Add card → Mikonus 3D**, and use the
+graphical editor. Existing/manual YAML remains supported:
 
 ```yaml
 type: custom:mikonus-3d-card
