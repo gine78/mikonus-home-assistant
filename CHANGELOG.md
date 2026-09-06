@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.2 Beta
+
+- Illuminate LED strips and LED pendant lights with a continuous light band across
+  their full length, including brightness, color and live on/off controls.
+- Add soft ground shadows beneath static furniture, controlled by the existing
+  shadow visibility and strength settings.
+- Keep lamp illumination independent of room shadow strength and preserve the
+  existing render-on-demand behavior.
+
+Update to **v0.3.2** in HACS, restart Home Assistant and hard-refresh the dashboard
+once. Enable **Show beta versions** if the update is not listed. Existing scenes,
+bindings and card settings are retained; no scene republish or card recreation is
+required.
+
 ## 0.3.1 Beta
 
 - Keep lamp light cones soft at every shadow strength, including 100%.
