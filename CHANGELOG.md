@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.3 Beta
+
+- Fix a clipped 3D scene and blank space below it in cards whose height is calculated automatically by the dashboard layout.
+- Make the full-width floor-selection header transparent over the scene while preserving the floor buttons and their backgrounds.
+- The embedded viewer now fills the available card height and follows card resizing without recreating the renderer.
+
+Update to 0.2.3 in HACS, restart Home Assistant and refresh the dashboard once.
+No scene republish or card configuration change is required.
+
+Declared Home Assistant Core minimum remains 2026.1.0. The existing runtime
+acceptance baseline is Core 2026.9.0; earlier 2026 releases remain open to beta
+feedback. The known extreme early-restart limitation and refresh workaround remain.
+
 ## 0.2.2 Beta
 
 - Lower the declared Home Assistant Core minimum to **2026.1.0**, allowing earlier 2026 installations to try the beta.

@@ -1,6 +1,6 @@
 # Mikonus Dashboard for Home Assistant
 
-**Beta — version 0.2.2.**
+**Beta — version 0.2.3.**
 
 Mikonus publishes an interactive multi-floor 3D dashboard to Home Assistant.
 This integration stores published scenes and connects the Mikonus dashboard
@@ -32,7 +32,7 @@ Chromium or WebKit browser. Other versions and physical devices have not been fu
    **Integration** as the type. Add the repository.
 4. Find **Mikonus Dashboard** and download it. For the beta release, enable
    **Show beta versions** in its download/redownload dialog if necessary and
-   select **v0.2.2**.
+   select **v0.2.3**.
 5. Restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Mikonus Dashboard**
    and submit the setup form. No additional account is required by the integration.
@@ -48,7 +48,7 @@ layouts; place it in any of your Home Assistant dashboards.
 
 ## Updating from 0.2.0
 
-Update to **v0.2.2** in HACS and restart Home Assistant. After the successful
+Update to **v0.2.3** in HACS and restart Home Assistant. After the successful
 update, remove the old manually added Mikonus Lovelace resource
 (`/local/mikonus-3d-card.js`, including any version suffix) through the Resources
 UI or your own YAML. You can then delete `/config/www/mikonus-3d-card.js`.
