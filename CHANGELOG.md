@@ -2,6 +2,7 @@
 
 ## 0.2.3 Beta
 
+- Follow the active Home Assistant light/dark mode, including live theme changes, readable summary text and matching shared renderer controls.
 - Fix a clipped 3D scene and blank space below it in cards whose height is calculated automatically by the dashboard layout.
 - Make the full-width floor-selection header transparent over the scene while preserving the floor buttons and their backgrounds.
 - The embedded viewer now fills the available card height and follows card resizing without recreating the renderer.

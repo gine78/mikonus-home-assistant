@@ -46,6 +46,13 @@ need no `/config/www` copy and no manual Lovelace resource registration.
 Mikonus is a normal custom card for Masonry, Sections and card-compatible Panel
 layouts; place it in any of your Home Assistant dashboards.
 
+## Appearance
+
+The card follows Home Assistant’s active light/dark mode, including changes while
+the dashboard is open. The floor-selection header is transparent over the scene;
+the floor buttons retain their own backgrounds. Card resizing keeps the viewer
+mounted. No extra theme configuration is required.
+
 ## Updating from 0.2.0
 
 Update to **v0.2.3** in HACS and restart Home Assistant. After the successful
