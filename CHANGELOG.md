@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.1 Beta
+
+- Keep lamp light cones soft at every shadow strength, including 100%.
+- Apply the shadow-strength setting to general room shadows independently of
+  lamp illumination. Lamp cones use the same unshadowed falloff as the previous
+  0% setting, without hard silhouettes from furniture or the lamp itself.
+- Preserve lamp color, brightness and live controls when changing shadow settings.
+
+Update to 0.3.1 in HACS, restart Home Assistant and hard-refresh the dashboard
+once. Existing scenes, bindings and card settings are retained; no scene republish
+or card recreation is required.
+
 ## 0.3.0 Beta
 
 - Register **Mikonus 3D** as a selectable Lovelace card with a graphical,

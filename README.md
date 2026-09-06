@@ -1,6 +1,6 @@
 # Mikonus Dashboard for Home Assistant
 
-**Beta — version 0.3.0.**
+**Beta — version 0.3.1.**
 
 Mikonus publishes an interactive multi-floor 3D dashboard to Home Assistant.
 This integration stores published scenes and connects the Mikonus dashboard
@@ -35,7 +35,7 @@ Chromium or WebKit browser. Other versions and physical devices have not been fu
    **Integration** as the type. Add the repository.
 4. Find **Mikonus Dashboard** and download it. For the beta release, enable
    **Show beta versions** in its download/redownload dialog if necessary and
-   select **v0.3.0**.
+   select **v0.3.1**.
 5. Restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Mikonus Dashboard**
    and submit the setup form. No additional account is required by the integration.
@@ -59,9 +59,12 @@ automatic brightness, camera lock/rotation/zoom/pan, floor controls, quick
 controls and device markers. These settings apply only to that card instance and
 do not modify or duplicate the published Dashboard Scene.
 
+Lamp light cones keep their soft falloff at every shadow strength. The shadow
+slider controls general room shadows independently of lamp illumination.
+
 ## Updating an existing installation
 
-Update to **v0.3.0** in HACS and restart Home Assistant. Existing Config Entries,
+Update to **v0.3.1** in HACS and restart Home Assistant. Existing Config Entries,
 published scenes, bindings and Lovelace card YAML are retained. Hard-refresh the
 dashboard once so it loads the new frontend bundle. No scene republish or card
 recreation is required.
