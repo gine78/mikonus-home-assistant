@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.3.3 Beta
+
+- Keep local lamp and LED illumination inside the authored room, so light no
+  longer crosses walls and closed doors block it.
+- Preserve continuous LED illumination on furniture and decor in the same room
+  while excluding adjacent rooms.
+- Correct the orientation of asymmetric furniture and appliances to match the
+  canonical Mikonus geometry.
+- Preserve soft lamp cones, furniture ground shadows and render-on-demand.
+
+Update to **v0.3.3** in HACS, restart Home Assistant and hard-refresh the dashboard
+once. Enable **Show beta versions** if the update is not listed. Existing scenes,
+bindings and card settings are retained; no scene republish or card recreation is
+required.
+
 ## 0.3.2 Beta
 
 - Illuminate LED strips and LED pendant lights with a continuous light band across
