@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.6 Beta
+
+- Keep the floor plan readable after sunset with a shared **Indoor brightness in
+  darkness** setting while the scene background continues to follow solar
+  darkness.
+- Soften and reduce the continuous light wash from LED pendant bars, including
+  rounded falloff without separate spot lights.
+- Preserve solar direction, shadows, local lamp states and render-on-demand.
+
+Update to **v0.3.6** in HACS, restart Home Assistant and hard-refresh the
+dashboard once. Existing scenes and bindings remain unchanged. The new indoor
+brightness setting is enabled by default and can be changed per card in the
+graphical editor.
+
 ## 0.3.5 Beta
 
 - Add local Mikonus brand icons in standard and dark variants for HACS and
