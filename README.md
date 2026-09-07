@@ -1,6 +1,6 @@
 # Mikonus Dashboard for Home Assistant
 
-**Beta — version 0.3.4.**
+**Beta — version 0.3.5.**
 
 Mikonus publishes an interactive multi-floor 3D dashboard to Home Assistant.
 This integration stores published scenes and connects the Mikonus dashboard
@@ -35,7 +35,7 @@ Chromium or WebKit browser. Other versions and physical devices have not been fu
    **Integration** as the type. Add the repository.
 4. Find **Mikonus Dashboard** and download it. For the beta release, enable
    **Show beta versions** in its download/redownload dialog if necessary and
-   select **v0.3.4**.
+   select **v0.3.5**.
 5. Restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Mikonus Dashboard**
    and submit the setup form. No additional account is required by the integration.
@@ -48,6 +48,13 @@ The integration bundles, serves and loads the card automatically. Fresh installs
 need no `/config/www` copy and no manual Lovelace resource registration.
 Mikonus is a normal custom card for Masonry, Sections and card-compatible Panel
 layouts; place it in any of your Home Assistant dashboards.
+
+The repository also includes Mikonus brand icons for HACS and Home Assistant's
+integration surfaces. Home Assistant Core 2026.3 and newer supports these bundled
+local integration images; older supported beta versions may keep showing a generic
+integration icon. Home Assistant currently provides no separate logo field for
+third-party cards in the card picker, so the card is identified there by its
+**Mikonus 3D** name and description.
 
 ## Appearance and card editor
 
@@ -71,7 +78,7 @@ renderer keeps using its local time-based behavior.
 
 ## Updating an existing installation
 
-Update to **v0.3.4** in HACS and restart Home Assistant. Existing Config Entries,
+Update to **v0.3.5** in HACS and restart Home Assistant. Existing Config Entries,
 published scenes, bindings and Lovelace card YAML are retained. Hard-refresh the
 dashboard once so it loads the new frontend bundle. No scene republish or card
 recreation is required.
@@ -99,18 +106,30 @@ availability of the native publisher depends on your installed Mikonus app
 version; this repository does not install or update that app. If the Home
 Assistant publisher is absent, an app version with that publisher is required.
 
-## Add the card
+## Add the Mikonus 3D card (recommended)
 
-Edit a Home Assistant dashboard, choose **Add card → Mikonus 3D**, and use the
-graphical editor. Existing/manual YAML remains supported:
+After publishing a scene, edit the intended Home Assistant dashboard, choose
+**Add card**, search for **Mikonus 3D**, select it and use the graphical editor.
+When exactly one scene is available, the editor selects it automatically. With
+multiple scenes, choose the intended published scene in the editor. Save the card;
+normal setup does not require YAML.
+
+Published scene changes appear live. If no scene has been published, publish one
+before expecting the 3D dashboard to appear. Removing the integration deletes its
+stored scenes; reloading it preserves them.
+
+## Optional: add the card manually with YAML
+
+Manual YAML remains available for advanced setups and existing cards. In the
+dashboard editor choose **Add card → Manual**, then use:
 
 ```yaml
 type: custom:mikonus-3d-card
 scene: published
 ```
 
-When exactly one scene is published, it is selected automatically. For multiple
-scenes, add `scene_id` with the scene ID returned by your publisher:
+For multiple published scenes, add `scene_id` with the scene ID returned by your
+publisher:
 
 ```yaml
 type: custom:mikonus-3d-card
@@ -118,9 +137,8 @@ scene: published
 scene_id: mikonus:your-scene-id
 ```
 
-Published scene changes appear live. If no scene has been published, publish one
-before expecting the 3D dashboard to appear. Removing the integration deletes its
-stored scenes; reloading it preserves them.
+This manual-card option still uses the frontend module loaded by the integration.
+Do not add a separate `/local/mikonus-3d-card.js` Lovelace resource.
 
 ## Known beta limitation — restart and wall displays
 

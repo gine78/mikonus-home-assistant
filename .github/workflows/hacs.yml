@@ -12,5 +12,5 @@ jobs:
         with:
           category: integration
           # Custom-repository beta: no default-list submission or license decision.
-          ignore: brands license
+          ignore: license
           comment: false

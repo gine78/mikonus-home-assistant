@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.5 Beta
+
+- Add local Mikonus brand icons in standard and dark variants for HACS and
+  supported Home Assistant integration surfaces.
+- Make the selectable **Mikonus 3D** card and its graphical editor the primary
+  dashboard setup path in the public instructions.
+- Keep manual YAML card creation as an optional advanced/legacy path; manual
+  frontend resource registration remains unnecessary.
+
+Update to **v0.3.5** in HACS and restart Home Assistant. Existing scenes,
+bindings, card settings and renderer behavior are unchanged. Home Assistant Core
+2026.3 and newer can use the bundled local integration branding; older supported
+beta versions may continue to show their generic integration icon.
+
 ## 0.3.4 Beta
 
 - Tageshelligkeit, Szenenhintergrund, Sonnenrichtung und Farben der goldenen
