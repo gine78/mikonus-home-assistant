@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.4 Beta
+
+- Tageshelligkeit, Szenenhintergrund, Sonnenrichtung und Farben der goldenen
+  Stunde folgen jetzt den Home-Assistant-Sonnendaten.
+- Bei fehlenden oder ungültigen Sonnenwerten bleibt die lokale Zeitsteuerung des
+  gemeinsamen Renderers aktiv.
+- Die laufende Ansicht übernimmt Änderungen des Sonnenstands ohne einen zweiten
+  Renderer oder einen Neuaufbau der Szene.
+
+Update auf **v0.3.4** in HACS, Home Assistant neu starten und das Dashboard einmal
+hart aktualisieren. Falls das Update nicht angezeigt wird, **Beta-Versionen
+anzeigen** aktivieren. Vorhandene Szenen, Bindings und Karteneinstellungen bleiben
+erhalten; ein erneutes Veröffentlichen der Szene ist nicht erforderlich.
+
 ## 0.3.3 Beta
 
 - Keep local lamp and LED illumination inside the authored room, so light no

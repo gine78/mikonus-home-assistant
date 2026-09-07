@@ -1,6 +1,6 @@
 # Mikonus Dashboard for Home Assistant
 
-**Beta — version 0.3.3.**
+**Beta — version 0.3.4.**
 
 Mikonus publishes an interactive multi-floor 3D dashboard to Home Assistant.
 This integration stores published scenes and connects the Mikonus dashboard
@@ -35,7 +35,7 @@ Chromium or WebKit browser. Other versions and physical devices have not been fu
    **Integration** as the type. Add the repository.
 4. Find **Mikonus Dashboard** and download it. For the beta release, enable
    **Show beta versions** in its download/redownload dialog if necessary and
-   select **v0.3.3**.
+   select **v0.3.4**.
 5. Restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Mikonus Dashboard**
    and submit the setup form. No additional account is required by the integration.
@@ -65,10 +65,13 @@ LED strips and LED pendant lights illuminate their full length with a continuous
 light band. Soft ground shadows beneath furniture follow the shadow settings.
 Lamp and LED illumination stays inside its authored room, including at closed
 doors. Asymmetric furniture and appliances follow their canonical orientation.
+Daylight, the scene backdrop, sun direction and golden-hour colors follow Home
+Assistant's sun position. If those values are unavailable, the canonical
+renderer keeps using its local time-based behavior.
 
 ## Updating an existing installation
 
-Update to **v0.3.3** in HACS and restart Home Assistant. Existing Config Entries,
+Update to **v0.3.4** in HACS and restart Home Assistant. Existing Config Entries,
 published scenes, bindings and Lovelace card YAML are retained. Hard-refresh the
 dashboard once so it loads the new frontend bundle. No scene republish or card
 recreation is required.
