@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.7.0 Beta
+
+- Clear the selected `scene_id` and its floor/room selection after an
+  administrator explicitly deletes that Scene from the same graphical card
+  editor. The deleted ID can no longer trap the Scene Picker in an unavailable
+  selection.
+- Select the sole remaining Scene automatically, or leave the picker ready for
+  an explicit choice when several Scenes remain.
+- Preserve explicit stale selections for Scenes deleted outside the current
+  editor, so external deletion or replacement never silently retargets a card.
+
+Update to **v0.7.0** in HACS and restart Home Assistant. Existing Config Entries,
+published Scenes, bindings and unrelated card settings remain valid. Fully
+reload the dashboard after the update; no Scene republish or card recreation is
+required.
+
 ## 0.6.0 Beta
 
 - A selected Home Assistant entity now acts as the anchor for its physical HA
