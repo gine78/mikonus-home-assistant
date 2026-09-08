@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.5.0 Beta
+
+- Select published scenes by name in the visual card editor; manual `scene_id`
+  entry remains available for existing and advanced YAML configurations.
+- Show a complete scene, a fixed floor or a single room, with independent view
+  choices for multiple cards backed by the same published scene.
+- Manage published scenes with revision and last-published information and delete
+  only the selected Home Assistant copy after explicit confirmation.
+- Improve multi-scene publishing, revision-safe deletion, atomic replacement and
+  explicit stale-scene handling without silently retargeting existing cards.
+- Keep the last successful scene catalog and last working rendering during
+  temporary connection failures, with explicit retry and reconnect recovery.
+- Preserve `custom:mikonus-3d-card`, optional `scene_id` and Dashboard Scene v1/v2
+  compatibility; `view_mode`, `floor_id` and `room_id` remain optional.
+
+Update to **v0.5.0** in HACS and restart Home Assistant. Enable **Show beta
+versions** if the update is not listed. Existing Config Entries, scenes,
+bindings and card YAML are retained; no scene republish or card recreation is
+required. Fully reload the dashboard after the update; if the previous custom
+element remains loaded, use a hard reload or open the dashboard in a new tab.
+
 ## 0.4.0 Beta
 
 - Add a visual Scene Picker to the card editor; normal setup no longer requires
