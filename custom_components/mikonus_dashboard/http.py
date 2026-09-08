@@ -59,7 +59,8 @@ class MetadataView(HomeAssistantView):
                         "requestIdRequired": True,
                         "retryReceiptsPerScene": MAX_REQUESTS_PER_SCENE,
                         "assets": "catalogKeysOnly",
-                        "sceneDeletion": False,
+                        "sceneDeletion": True,
+                        "atomicSceneReplacement": True,
                     },
                     "scenes": [
                         store.metadata(record)
@@ -78,6 +79,9 @@ class PublishView(HomeAssistantView):
     requires_auth = True
 
     async def put(self, request):
+        return await self._put(request, replacing=False)
+
+    async def _put(self, request, *, replacing):
         try:
             if not request[KEY_HASS_USER].is_admin:
                 raise ContractError(
@@ -126,12 +130,15 @@ class PublishView(HomeAssistantView):
                 raise ContractError(
                     "invalid_json", "Expected unique-key, finite UTF-8 JSON."
                 ) from None
-            if not isinstance(payload, dict) or set(payload) != {
+            expected_fields = {
                 "instanceId",
                 "requestId",
                 "expectedRevision",
                 "scene",
-            }:
+            }
+            if replacing:
+                expected_fields.update({"replacedSceneId", "replacedExpectedRevision"})
+            if not isinstance(payload, dict) or set(payload) != expected_fields:
                 raise ContractError(
                     "invalid_request",
                     "Expected instanceId, requestId, expectedRevision and scene.",
@@ -153,7 +160,21 @@ class PublishView(HomeAssistantView):
                     "invalid_request",
                     "expectedRevision must be a nonnegative safe integer.",
                 )
-            receipt = await store.async_publish(payload)
+            if replacing and (
+                not isinstance(payload["replacedSceneId"], str)
+                or not payload["replacedSceneId"]
+                or type(payload["replacedExpectedRevision"]) is not int
+                or not 1 <= payload["replacedExpectedRevision"] <= 9007199254740991
+            ):
+                raise ContractError(
+                    "invalid_request",
+                    "Invalid replacedSceneId or replacedExpectedRevision.",
+                )
+            receipt = (
+                await store.async_replace(payload)
+                if replacing
+                else await store.async_publish(payload)
+            )
             return self.json(receipt, headers={"Cache-Control": "no-store"})
         except TimeoutError:
             return self.json(
@@ -162,3 +183,11 @@ class PublishView(HomeAssistantView):
             )
         except ContractError as err:
             return self.json(err.body, status_code=err.status)
+
+
+class ReplaceView(PublishView):
+    url = "/api/mikonus_dashboard/scene/replace"
+    name = "api:mikonus_dashboard:scene:replace"
+
+    async def put(self, request):
+        return await self._put(request, replacing=True)

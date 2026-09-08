@@ -8,8 +8,14 @@ from .access import delivery, get_store
 from .models import ContractError
 
 
+def positive_safe_integer(value):
+    if type(value) is not int or not 1 <= value <= 9007199254740991:
+        raise vol.Invalid("Expected a positive safe integer")
+    return value
+
+
 def register_commands(hass):
-    for command in (scene_list, scene_get, scene_subscribe, scene_watch):
+    for command in (scene_list, scene_get, scene_delete, scene_subscribe, scene_watch):
         websocket_api.async_register_command(hass, command)
 
 
@@ -35,6 +41,26 @@ def scene_get(hass, connection, msg):
         connection.send_result(
             msg["id"], delivery(get_store(hass), msg["scene_id"], connection.user)
         )
+    except ContractError as err:
+        connection.send_error(msg["id"], err.code, str(err))
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): "mikonus_dashboard/scene/delete",
+        vol.Required("scene_id"): str,
+        vol.Required("expected_revision"): positive_safe_integer,
+    }
+)
+@websocket_api.require_admin
+@websocket_api.async_response
+async def scene_delete(hass, connection, msg):
+    """Delete one selected published scene; native HA admin auth is authoritative."""
+    try:
+        metadata = await get_store(hass).async_delete(
+            msg["scene_id"], msg["expected_revision"]
+        )
+        connection.send_result(msg["id"], {"deleted": True, "scene": metadata})
     except ContractError as err:
         connection.send_error(msg["id"], err.code, str(err))
 
@@ -122,11 +148,13 @@ def scene_watch(hass, connection, msg):
 
     remove_ready = hass.bus.async_listen("mikonus_dashboard_ready", ready)
     remove_publish = hass.bus.async_listen("mikonus_dashboard_published", published)
+    remove_replace = hass.bus.async_listen("mikonus_dashboard_replaced", published)
 
     @callback
     def unsubscribe():
         remove_ready()
         remove_publish()
+        remove_replace()
 
     connection.subscriptions[msg["id"]] = unsubscribe
     connection.send_result(msg["id"])

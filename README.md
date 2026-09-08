@@ -1,6 +1,6 @@
 # Mikonus Dashboard for Home Assistant
 
-**Beta — version 0.3.6.**
+**Beta — version 0.4.0.**
 
 Mikonus publishes an interactive multi-floor 3D dashboard to Home Assistant.
 This integration stores published scenes and connects the Mikonus dashboard
@@ -16,6 +16,9 @@ renderer to live Home Assistant entity states and controls.
 - Authenticated scene publishing, persistent storage and live scene updates.
 - Revision conflict detection, retry receipts and reconnect recovery.
 - **Mikonus 3D** in the normal Lovelace card picker with a graphical editor.
+- Visual scene picker with complete-scene, floor and room views.
+- Scene management with revision and last-published information.
+- Several cards can use the same scene with independent card-local views.
 - Per-card appearance, camera and dashboard-UI settings with live preview.
 - Responsive full-width defaults for Sections/Grid dashboards.
 
@@ -35,7 +38,7 @@ Chromium or WebKit browser. Other versions and physical devices have not been fu
    **Integration** as the type. Add the repository.
 4. Find **Mikonus Dashboard** and download it. For the beta release, enable
    **Show beta versions** in its download/redownload dialog if necessary and
-   select **v0.3.6**.
+   select **v0.4.0**.
 5. Restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Mikonus Dashboard**
    and submit the setup form. No additional account is required by the integration.
@@ -81,7 +84,7 @@ renderer keeps using its local time-based behavior.
 
 ## Updating an existing installation
 
-Update to **v0.3.6** in HACS and restart Home Assistant. Existing Config Entries,
+Update to **v0.4.0** in HACS and restart Home Assistant. Existing Config Entries,
 published scenes, bindings and Lovelace card YAML are retained. Hard-refresh the
 dashboard once so it loads the new frontend bundle. No scene republish or card
 recreation is required.
@@ -109,17 +112,41 @@ availability of the native publisher depends on your installed Mikonus app
 version; this repository does not install or update that app. If the Home
 Assistant publisher is absent, an app version with that publisher is required.
 
+The publisher applies the Mikonus entitlement policy; the HA scene store and
+card remain multi-scene viewers. Free publishing may keep one active Mikonus
+project per HA target: publishing the same project updates its stable scene ID,
+while another project requires an explicit Replace/Cancel decision. Replacement
+is revision-checked and atomic. Premium may keep several scenes. A later
+downgrade never removes existing scenes, and extra cards or floor/room views do
+not count as additional published scenes. Manually deleting the only scene
+clears its HA record so a later Free publish can start normally.
+
 ## Add the Mikonus 3D card (recommended)
 
 After publishing a scene, edit the intended Home Assistant dashboard, choose
 **Add card**, search for **Mikonus 3D**, select it and use the graphical editor.
 When exactly one scene is available, the editor selects it automatically. With
-multiple scenes, choose the intended published scene in the editor. Save the card;
-normal setup does not require YAML.
+multiple scenes, choose the intended published scene by name. Then choose the
+complete scene, a named floor, or a named room. Save the card; normal setup does
+not require YAML or knowledge of technical IDs.
+
+One published scene can back several independent cards—for example the complete
+home, the upper floor, the living room and the kitchen. Each card stores only its
+own view choice. The full published scene and other cards remain unchanged.
+
+The editor's **Manage published scenes** section lists name, revision and last
+publication time. An HA administrator can delete one selected HA copy after an
+explicit confirmation. This does not delete the Mikonus project, devices,
+entities or another published scene.
 
 Published scene changes appear live. If no scene has been published, publish one
 before expecting the 3D dashboard to appear. Removing the integration deletes its
 stored scenes; reloading it preserves them.
+
+If a Free replacement or manual deletion removes the scene selected by an
+existing card, that card stays bound to its saved ID and reports that the scene
+is no longer available. The editor refreshes its scene list and offers the
+remaining scenes without silently switching the stale card.
 
 ## Optional: add the card manually with YAML
 
@@ -138,6 +165,25 @@ publisher:
 type: custom:mikonus-3d-card
 scene: published
 scene_id: mikonus:your-scene-id
+```
+
+Optional fixed views use stable IDs in YAML:
+
+```yaml
+# One floor
+type: custom:mikonus-3d-card
+scene: published
+scene_id: mikonus:your-scene-id
+view_mode: floor
+floor_id: floor-upper
+
+# One room
+type: custom:mikonus-3d-card
+scene: published
+scene_id: mikonus:your-scene-id
+view_mode: room
+floor_id: floor-ground
+room_id: room-living
 ```
 
 This manual-card option still uses the frontend module loaded by the integration.
@@ -160,7 +206,11 @@ recover automatically. The last working scene stays visible during an interrupti
 - **Custom element does not exist:** wait until Home Assistant has finished
   starting, then refresh the dashboard once.
 - **Blank or unavailable renderer:** use a browser with working WebGL support.
-- **No scene / multiple scenes:** publish a scene or set the intended `scene_id`.
+- **No scene:** publish a scene from Mikonus first.
+- **Several scenes:** select the intended scene by name in the graphical editor,
+  or set `scene_id` in advanced YAML.
+- **Deleted scene:** edit the affected card and select another published scene;
+  Mikonus never switches a stale card silently.
 - **Control unavailable:** verify that the entity is available and supports the
   requested action in Home Assistant.
 

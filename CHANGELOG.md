@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.4.0 Beta
+
+- Add a visual Scene Picker to the card editor; normal setup no longer requires
+  a manually entered Scene ID.
+- Add complete-scene, Floor and Room views with camera fitting and room filtering.
+- Keep view selection local to each card, including multiple cards backed by the
+  same published scene.
+- Add Scene Management with revision and last-published information and confirmed
+  deletion of only the selected Mikonus scene.
+- Improve multi-scene behavior, stale-scene handling and safe atomic replacement.
+- Preserve existing `custom:mikonus-3d-card` and optional `scene_id` YAML; all new
+  view fields are optional.
+
+Update to **v0.4.0** in HACS, restart Home Assistant and hard-refresh the
+dashboard once. Existing Config Entries, scenes, bindings and card YAML remain
+compatible; no scene republish or card recreation is required.
+
 ## 0.3.6 Beta
 
 - Keep the floor plan readable after sunset with a shared **Indoor brightness in

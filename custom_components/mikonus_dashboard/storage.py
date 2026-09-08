@@ -111,6 +111,7 @@ class SceneStore:
     def metadata(self, record):
         return {
             "sceneId": record["scene"]["sceneId"],
+            "projectName": record["scene"]["name"],
             "schemaVersion": 2,
             "revision": record["revision"],
             "digest": record["digest"],
@@ -156,6 +157,22 @@ class SceneStore:
         # Survive HTTP cancellation. HA owns and awaits this finite task at shutdown.
         return await asyncio.shield(
             self.hass.async_create_task(self._publish(payload), "Mikonus scene publish")
+        )
+
+    async def async_replace(self, payload):
+        """Atomically exchange one owned scene for one validated new scene."""
+        return await asyncio.shield(
+            self.hass.async_create_task(
+                self._replace(payload), "Mikonus scene replacement"
+            )
+        )
+
+    async def async_delete(self, scene_id, expected_revision):
+        """Delete exactly one published HA scene without touching its source project."""
+        return await asyncio.shield(
+            self.hass.async_create_task(
+                self._delete(scene_id, expected_revision), "Mikonus scene deletion"
+            )
         )
 
     async def _publish(self, payload):
@@ -220,20 +237,7 @@ class SceneStore:
             while len(record["requests"]) > MAX_REQUESTS_PER_SCENE:
                 del record["requests"][next(iter(record["requests"]))]
             candidate = {"scenes": {**self.scenes, scene_id: record}}
-            try:
-                await self.storage.async_save(candidate)
-                # HA Store logs some write failures instead of propagating them. Use its
-                # public read API to verify durability before issuing any receipt/event.
-                persisted = await self._storage().async_load()
-                if persisted != candidate:
-                    raise ValueError("Storage verification failed")
-            except Exception as err:
-                _LOGGER.error("Mikonus persistence failed: %s", type(err).__name__)
-                raise ContractError(
-                    "storage_error",
-                    "Scene could not be durably stored; retry the exact request.",
-                    503,
-                ) from err
+            await self._commit(candidate)
             self.scenes = candidate["scenes"]
             if updated:
                 self.hass.bus.async_fire(
@@ -248,3 +252,175 @@ class SceneStore:
                     }
                 )
             return deepcopy(receipt)
+
+    async def _replace(self, payload):
+        async with self.lock:
+            self.ensure_open()
+            if payload["instanceId"] != self.instance_id:
+                raise ContractError(
+                    "wrong_instance",
+                    "Metadata and replacement must address the same configured instance.",
+                    409,
+                )
+
+            scene = validate_scene(payload["scene"])
+            scene_id = scene["sceneId"]
+            replaced_scene_id = payload["replacedSceneId"]
+            if scene_id == replaced_scene_id:
+                raise ContractError(
+                    "invalid_request",
+                    "Replacement requires two different scene identities.",
+                )
+
+            current = self.scenes.get(scene_id)
+            fingerprint = digest(payload)
+            request_id = payload["requestId"]
+            if current and (previous := current["requests"].get(request_id)):
+                if previous["fingerprint"] != fingerprint:
+                    raise ContractError(
+                        "request_id_conflict",
+                        "requestId was already used with different request content.",
+                        409,
+                    )
+                return deepcopy(previous["receipt"])
+
+            revision = current["revision"] if current else 0
+            if payload["expectedRevision"] != revision:
+                raise ContractError(
+                    "revision_conflict",
+                    "Refresh metadata before a new replacement attempt.",
+                    409,
+                    currentRevision=revision,
+                )
+            replaced = self.scenes.get(replaced_scene_id)
+            replaced_revision = replaced["revision"] if replaced else 0
+            if payload["replacedExpectedRevision"] != replaced_revision:
+                raise ContractError(
+                    "revision_conflict",
+                    "The scene selected for replacement has changed.",
+                    409,
+                    currentRevision=replaced_revision,
+                )
+            if not replaced:
+                raise ContractError(
+                    "replacement_conflict",
+                    "The scene selected for replacement no longer exists.",
+                    409,
+                )
+            if not self._is_mikonus_managed(replaced) or not self._is_mikonus_scene(
+                scene
+            ):
+                raise ContractError(
+                    "foreign_scene",
+                    "Only Mikonus-managed scenes can participate in replacement.",
+                )
+
+            content_digest = digest(scene)
+            record = {
+                "scene": deepcopy(scene),
+                "revision": revision + 1,
+                "digest": content_digest,
+                "publishedAt": datetime.now(timezone.utc).isoformat(),
+                "requests": {},
+            }
+            receipt = {
+                "integration": DOMAIN,
+                "integrationVersion": VERSION,
+                "contractVersion": CONTRACT_VERSION,
+                "instanceId": self.instance_id,
+                "requestId": request_id,
+                **self.metadata(record),
+                "updated": True,
+                "replacedSceneId": replaced_scene_id,
+            }
+            record["requests"][request_id] = {
+                "fingerprint": fingerprint,
+                "receipt": receipt,
+            }
+            candidate_scenes = {
+                key: value
+                for key, value in self.scenes.items()
+                if key != replaced_scene_id
+            }
+            candidate_scenes[scene_id] = record
+            candidate = {"scenes": candidate_scenes}
+            await self._commit(candidate)
+            self.scenes = candidate_scenes
+            self.hass.bus.async_fire(
+                "mikonus_dashboard_replaced",
+                {
+                    "replacedSceneId": replaced_scene_id,
+                    "sceneId": scene_id,
+                    "revision": record["revision"],
+                },
+            )
+            self._notify(
+                {
+                    "type": "removed",
+                    "sceneId": replaced_scene_id,
+                }
+            )
+            self._notify(
+                {
+                    "type": "updated",
+                    "sceneId": scene_id,
+                    "revision": record["revision"],
+                }
+            )
+            return deepcopy(receipt)
+
+    async def _delete(self, scene_id, expected_revision):
+        async with self.lock:
+            self.ensure_open()
+            record = self.get(scene_id)
+            if expected_revision != record["revision"]:
+                raise ContractError(
+                    "revision_conflict",
+                    "The scene selected for deletion has changed.",
+                    409,
+                    currentRevision=record["revision"],
+                )
+            metadata = self.metadata(record)
+            candidate_scenes = {
+                key: value for key, value in self.scenes.items() if key != scene_id
+            }
+            await self._commit({"scenes": candidate_scenes})
+            self.scenes = candidate_scenes
+            event = {
+                "type": "deleted",
+                "sceneId": scene_id,
+                "revision": record["revision"],
+            }
+            self.hass.bus.async_fire("mikonus_dashboard_published", event)
+            self._notify(event)
+            return deepcopy(metadata)
+
+    @staticmethod
+    def _is_mikonus_scene(scene):
+        generator = (scene.get("metadata") or {}).get("generator")
+        return (
+            isinstance(scene.get("sceneId"), str)
+            and scene["sceneId"].startswith("mikonus:")
+            and isinstance(generator, str)
+            and generator.startswith("mikonus-")
+        )
+
+    @classmethod
+    def _is_mikonus_managed(cls, record):
+        return cls._is_mikonus_scene(record["scene"])
+
+    async def _commit(self, candidate):
+        try:
+            await self.storage.async_save(candidate)
+            # HA Store logs some write failures instead of propagating them. Use its
+            # public read API to verify durability before issuing any receipt/event.
+            persisted = await self._storage().async_load()
+            if persisted != candidate:
+                raise ValueError("Storage verification failed")
+        except Exception as err:
+            _LOGGER.error("Mikonus persistence failed: %s", type(err).__name__)
+            raise ContractError(
+                "storage_error",
+                "Scene could not be durably stored; retry the exact request.",
+                503,
+            ) from err

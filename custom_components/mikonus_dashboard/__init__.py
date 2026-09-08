@@ -5,7 +5,7 @@ import logging
 from homeassistant.exceptions import ConfigEntryNotReady
 
 from .frontend import async_register_frontend, unregister_frontend
-from .http import MetadataView, PublishView
+from .http import MetadataView, PublishView, ReplaceView
 from .models import DashboardRuntime, MikonusDashboardConfigEntry
 from .storage import SceneStore
 from .websocket import register_commands
@@ -21,6 +21,7 @@ async def async_setup(hass, config):
     # Handlers resolve the active entry on each request, including after reload.
     hass.http.register_view(MetadataView())
     hass.http.register_view(PublishView())
+    hass.http.register_view(ReplaceView())
     register_commands(hass)
     return True
 
