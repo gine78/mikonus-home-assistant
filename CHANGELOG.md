@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.6.0 Beta
+
+- A selected Home Assistant entity now acts as the anchor for its physical HA
+  device. Related entities are discovered and grouped automatically.
+- Display temperature, humidity, battery, environment, energy and binary-sensor
+  states without selecting every entity individually.
+- Use Home Assistant's current names, units, availability, device classes and
+  native state icons in device markers and details.
+- Route supported controls to the capable entity of the grouped device.
+- Add provider-neutral state and control support for fans and humidifiers.
+- Keep other Home Assistant entity domains visible as read-only information
+  instead of reporting the entire device as unsupported.
+
+Update to **v0.6.0** in HACS and restart Home Assistant. Enable **Show beta
+versions** if the update is not listed. Existing Config Entries, published
+scenes, bindings and card YAML are retained; no scene republish or card
+recreation is required. Fully reload the dashboard after the update.
+
+Automatic grouping requires Home Assistant to associate the entities with the
+same device in its entity registry. Standalone entities without a device
+association remain individually visible.
+
 ## 0.5.0 Beta
 
 - Select published scenes by name in the visual card editor; manual `scene_id`

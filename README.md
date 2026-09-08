@@ -1,6 +1,6 @@
 # Mikonus Dashboard for Home Assistant
 
-**Beta — version 0.5.0.**
+**Beta — version 0.6.0.**
 
 Mikonus publishes an interactive multi-floor 3D dashboard to Home Assistant.
 This integration stores published scenes and connects the Mikonus dashboard
@@ -10,8 +10,14 @@ renderer to live Home Assistant entity states and controls.
 
 - Multi-floor 3D scenes, floor switching, camera rotation and zoom.
 - Lights and switches; supported light brightness, color and color temperature.
-- Covers, climate, locks and vacuums through supported entity capabilities.
-- Motion, occupancy and contact sensor states.
+- Covers, climate, fans, humidifiers, locks and vacuums through supported entity capabilities.
+- Automatic physical-device grouping from one selected scene entity. Home
+  Assistant supplies the related entities, device classes, names, units,
+  availability and current state icons.
+- Temperature, humidity, battery, environment, energy and binary-sensor states
+  are discovered without selecting every entity individually.
+- Other Home Assistant entity domains remain visible as read-only information
+  instead of being reported as unsupported.
 - Live entity updates using the existing Home Assistant frontend connection.
 - Authenticated scene publishing, persistent storage and live scene updates.
 - Revision conflict detection, retry receipts and reconnect recovery.
@@ -30,6 +36,12 @@ releases are allowed for beta testing but have not been locally validated.
 Tested with Home Assistant Core **2026.9.0** and a WebGL-capable
 Chromium or WebKit browser. Other versions and physical devices have not been fully tested.
 
+The entity stored in a Dashboard Scene is an anchor. When Home Assistant's
+entity registry associates that entity with a physical device, the card groups
+all sibling entities belonging to that device and routes supported controls to
+the capable entity. Existing scenes therefore need no republish. Standalone
+entities without a Home Assistant device association remain individually visible.
+
 ## Install with HACS
 
 1. Install and configure [HACS](https://hacs.xyz/docs/use/) if needed.
@@ -38,7 +50,7 @@ Chromium or WebKit browser. Other versions and physical devices have not been fu
    **Integration** as the type. Add the repository.
 4. Find **Mikonus Dashboard** and download it. For the beta release, enable
    **Show beta versions** in its download/redownload dialog if necessary and
-   select **v0.5.0**.
+   select **v0.6.0**.
 5. Restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Mikonus Dashboard**
    and submit the setup form. No additional account is required by the integration.
@@ -84,7 +96,7 @@ renderer keeps using its local time-based behavior.
 
 ## Updating an existing installation
 
-Update to **v0.5.0** in HACS. Restart Home Assistant if the integration requests
+Update to **v0.6.0** in HACS. Restart Home Assistant if the integration requests
 it, then fully reload the dashboard page. A custom element already loaded in an
 older browser document can remain active, so use a hard reload or open the
 dashboard in a new tab after the frontend update. Existing Config Entries,
