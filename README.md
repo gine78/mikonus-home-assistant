@@ -1,6 +1,6 @@
 # Mikonus Dashboard for Home Assistant
 
-**Beta — version 0.7.0.**
+**Beta — version 0.8.0.**
 
 Mikonus publishes an interactive multi-floor 3D dashboard to Home Assistant.
 This integration stores published scenes and connects the Mikonus dashboard
@@ -11,13 +11,10 @@ renderer to live Home Assistant entity states and controls.
 - Multi-floor 3D scenes, floor switching, camera rotation and zoom.
 - Lights and switches; supported light brightness, color and color temperature.
 - Covers, climate, fans, humidifiers, locks and vacuums through supported entity capabilities.
-- Automatic physical-device grouping from one selected scene entity. Home
-  Assistant supplies the related entities, device classes, names, units,
-  availability and current state icons.
-- Temperature, humidity, battery, environment, energy and binary-sensor states
-  are discovered without selecting every entity individually.
-- Other Home Assistant entity domains remain visible as read-only information
-  instead of being reported as unsupported.
+- Automatic physical-device grouping from one scene entity, including temperature,
+  humidity, battery, environment, energy and binary-sensor states.
+- Every other HA entity remains visible as a read-only row with its current HA icon,
+  name, state, unit and availability.
 - Live entity updates using the existing Home Assistant frontend connection.
 - Authenticated scene publishing, persistent storage and live scene updates.
 - Revision conflict detection, retry receipts and reconnect recovery.
@@ -50,7 +47,7 @@ entities without a Home Assistant device association remain individually visible
    **Integration** as the type. Add the repository.
 4. Find **Mikonus Dashboard** and download it. For the beta release, enable
    **Show beta versions** in its download/redownload dialog if necessary and
-   select **v0.7.0**.
+   select **v0.8.0**.
 5. Restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Mikonus Dashboard**
    and submit the setup form. No additional account is required by the integration.
@@ -77,8 +74,10 @@ The card follows Home Assistant’s active light/dark mode, including changes wh
 the dashboard is open. The floor-selection header is transparent over the scene;
 the floor buttons retain their own backgrounds. Card resizing keeps the viewer
 mounted. Add or edit **Mikonus 3D** to configure ambient light, shadows, theme,
-automatic brightness, camera lock/rotation/zoom/pan, floor controls, quick
-controls and device markers. **Indoor brightness in darkness** keeps the floor
+automatic brightness, realistic architectural lighting, architectural or
+orthographic camera mode, field of view, perspective correction, camera
+lock/rotation/zoom/pan, automatic camera return, floor controls, device summary,
+quick controls and device markers. **Indoor brightness in darkness** keeps the floor
 plan readable after sunset while the background remains solar-driven. These
 settings apply only to that card instance and
 do not modify or duplicate the published Dashboard Scene.
@@ -96,14 +95,13 @@ renderer keeps using its local time-based behavior.
 
 ## Updating an existing installation
 
-Update to **v0.7.0** in HACS. Restart Home Assistant if the integration requests
-it, then fully reload the dashboard page. A custom element already loaded in an
-older browser document can remain active, so use a hard reload or open the
-dashboard in a new tab after the frontend update. When an administrator deletes
-the Scene selected by the currently edited card, the editor now clears that
-obsolete selection and immediately offers the remaining Scenes. Existing Config
-Entries, published Scenes, bindings and unrelated Lovelace card settings are
-retained; no Scene republish or card recreation is required.
+Update to **v0.8.0** in HACS and restart Home Assistant. Existing Config Entries,
+published scenes, bindings and unrelated Lovelace card settings are retained.
+Hard-refresh the dashboard once so it loads the new frontend bundle. When an
+administrator deletes the Scene selected by the currently edited card, the
+editor clears obsolete selections and immediately offers the remaining Scenes.
+The new presentation settings are optional and preserve existing card behavior
+unless changed. No scene republish or card recreation is required.
 
 Only installations upgraded from 0.2.0 that still have the old manually added
 Mikonus Lovelace resource should remove it

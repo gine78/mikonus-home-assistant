@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.8.0 Beta
+
+- Add Homey presentation-setting parity through the canonical shared renderer:
+  Architectural or Orthographic camera, architectural field of view,
+  perspective correction and automatic return to the default view.
+- Add the optional realistic architectural lighting profile with soft sunlight,
+  physical opening/cover occlusion, window-side daylight and indoor night
+  readability, without introducing a Home Assistant renderer fork.
+- Allow each card to hide its compact device summary independently while keeping
+  floor controls available.
+- Preserve the existing HA-only scene picker, scene/floor/room views, granular
+  camera permissions, theme controls, device markers, quick controls and Grid
+  sizing.
+- Keep provider-aware Home Assistant names, icons, grouped device entities,
+  native More-Info details and service routing on the HA adapter boundary.
+
+Update to **v0.8.0** in HACS and restart Home Assistant. Existing Config Entries,
+published Scenes, bindings and Lovelace card settings remain valid. Hard-refresh
+the dashboard once after updating. No Scene republish or card recreation is
+required.
+
 ## 0.7.0 Beta
 
 - Clear the selected `scene_id` and its floor/room selection after an
