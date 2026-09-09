@@ -1,6 +1,6 @@
 # Mikonus Dashboard for Home Assistant
 
-**Beta — version 0.8.0.**
+**Beta — version 0.9.0.**
 
 Mikonus publishes an interactive multi-floor 3D dashboard to Home Assistant.
 This integration stores published scenes and connects the Mikonus dashboard
@@ -47,7 +47,7 @@ entities without a Home Assistant device association remain individually visible
    **Integration** as the type. Add the repository.
 4. Find **Mikonus Dashboard** and download it. For the beta release, enable
    **Show beta versions** in its download/redownload dialog if necessary and
-   select **v0.8.0**.
+   select **v0.9.0**.
 5. Restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Mikonus Dashboard**
    and submit the setup form. No additional account is required by the integration.
@@ -89,19 +89,23 @@ light band. Pendant bars use a restrained, rounded light falloff. Soft ground
 shadows beneath furniture follow the shadow settings.
 Lamp and LED illumination stays inside its authored room, including at closed
 doors. Asymmetric furniture and appliances follow their canonical orientation.
-Daylight, the scene backdrop, sun direction and golden-hour colors follow Home
-Assistant's sun position. If those values are unavailable, the canonical
-renderer keeps using its local time-based behavior.
+For newly published scenes, daylight, the scene backdrop, sun direction and
+golden-hour colors follow the house location and geographic north authored in
+Mikonus. Older scenes continue to use Home Assistant's sun position, with the
+renderer clock as the final fallback. Background changes apply immediately
+without a separate fade.
 
 ## Updating an existing installation
 
-Update to **v0.8.0** in HACS and restart Home Assistant. Existing Config Entries,
+Update to **v0.9.0** in HACS and restart Home Assistant. Existing Config Entries,
 published scenes, bindings and unrelated Lovelace card settings are retained.
 Hard-refresh the dashboard once so it loads the new frontend bundle. When an
 administrator deletes the Scene selected by the currently edited card, the
 editor clears obsolete selections and immediately offers the remaining Scenes.
 The new presentation settings are optional and preserve existing card behavior
-unless changed. No scene republish or card recreation is required.
+unless changed. Existing scenes require no migration or card recreation.
+Republish from a compatible Mikonus version only to add the authored house
+location and geographic north used by the new solar calculation.
 
 Only installations upgraded from 0.2.0 that still have the old manually added
 Mikonus Lovelace resource should remove it

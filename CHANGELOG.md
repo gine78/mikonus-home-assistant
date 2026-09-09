@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.9.0 Beta
+
+- Accept the provider-neutral house latitude, longitude and geographic north
+  authored in Mikonus as optional Dashboard Scene metadata.
+- Calculate sun elevation, direction, daylight, golden-hour colors and shadows
+  from that authored location in the canonical renderer shared by Home
+  Assistant and Homey.
+- Keep Home Assistant's `sun.sun` entity as the fallback for existing scenes,
+  followed by the renderer's local time behavior when no solar data is
+  available.
+- Apply the time-appropriate scene backdrop immediately without the previous
+  four-second background fade.
+- Preserve all existing scene selection, multi-scene storage, card-local views,
+  device controls, camera settings, responsive sizing, permissions and recovery
+  behavior from 0.8.0.
+
+Update to **v0.9.0** in HACS, restart Home Assistant and hard-refresh the
+dashboard once. Existing Config Entries, published Scenes, bindings and
+Lovelace settings remain valid. Republish a Scene from a compatible Mikonus
+version only when the dashboard should use its authored house location and
+north alignment; older Scenes continue to work through the Home Assistant
+solar fallback.
+
 ## 0.8.0 Beta
 
 - Add Homey presentation-setting parity through the canonical shared renderer:

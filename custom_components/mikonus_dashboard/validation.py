@@ -125,10 +125,34 @@ def validate_scene(scene):
     text(scene["name"], "name")
     text(scene["defaultFloorId"], "defaultFloorId")
     if scene.get("metadata") is not None:
-        obj(scene["metadata"], (), ("generator", "generatedAt", "revision"), "metadata")
-        for k, v in scene["metadata"].items():
+        metadata = scene["metadata"]
+        obj(
+            metadata,
+            (),
+            (
+                "generator",
+                "generatedAt",
+                "revision",
+                "modelNorthDegrees",
+                "solarLocation",
+            ),
+            "metadata",
+        )
+        for k in ("generator", "generatedAt", "revision"):
+            v = metadata.get(k)
             if v is not None:
                 text(v, f"metadata.{k}")
+        if metadata.get("modelNorthDegrees") is not None:
+            number(metadata["modelNorthDegrees"], "metadata.modelNorthDegrees")
+        if metadata.get("solarLocation") is not None:
+            location = metadata["solarLocation"]
+            obj(location, ("latitude", "longitude"), (), "metadata.solarLocation")
+            number(location["latitude"], "metadata.solarLocation.latitude")
+            number(location["longitude"], "metadata.solarLocation.longitude")
+            if not -90 <= location["latitude"] <= 90:
+                fail("metadata.solarLocation.latitude", "Expected -90…90 degrees.")
+            if not -180 <= location["longitude"] <= 180:
+                fail("metadata.solarLocation.longitude", "Expected -180…180 degrees.")
     floors = scene["floors"]
     if not isinstance(floors, list) or not 1 <= len(floors) <= 16:
         fail("floors", "Expected 1–16 floors.")
