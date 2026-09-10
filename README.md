@@ -1,6 +1,6 @@
 # Mikonus Dashboard for Home Assistant
 
-**Beta — version 0.9.0.**
+**Beta — version 0.10.0.**
 
 Mikonus publishes an interactive multi-floor 3D dashboard to Home Assistant.
 This integration stores published scenes and connects the Mikonus dashboard
@@ -8,7 +8,8 @@ renderer to live Home Assistant entity states and controls.
 
 ## Features
 
-- Multi-floor 3D scenes, floor switching, camera rotation and zoom.
+- Multi-floor scenes with an interactive 2D/3D toggle, floor switching, camera
+  rotation, pan and zoom.
 - Lights and switches; supported light brightness, color and color temperature.
 - Covers, climate, fans, humidifiers, locks and vacuums through supported entity capabilities.
 - Automatic physical-device grouping from one scene entity, including temperature,
@@ -47,7 +48,7 @@ entities without a Home Assistant device association remain individually visible
    **Integration** as the type. Add the repository.
 4. Find **Mikonus Dashboard** and download it. For the beta release, enable
    **Show beta versions** in its download/redownload dialog if necessary and
-   select **v0.9.0**.
+   select **v0.10.0**.
 5. Restart Home Assistant.
 6. Open **Settings → Devices & services → Add integration → Mikonus Dashboard**
    and submit the setup form. No additional account is required by the integration.
@@ -77,10 +78,13 @@ mounted. Add or edit **Mikonus 3D** to configure ambient light, shadows, theme,
 automatic brightness, realistic architectural lighting, architectural or
 orthographic camera mode, field of view, perspective correction, camera
 lock/rotation/zoom/pan, automatic camera return, floor controls, device summary,
-quick controls and device markers. **Indoor brightness in darkness** keeps the floor
-plan readable after sunset while the background remains solar-driven. These
-settings apply only to that card instance and
-do not modify or duplicate the published Dashboard Scene.
+quick controls, device markers and an optional dynamic wall cutaway. The 2D/3D
+control switches the current card between its perspective view and an interactive
+top-down plan without remounting the viewer or losing the selected floor. Each
+card remembers its selected presentation mode locally across dashboard reloads.
+**Indoor brightness in darkness** keeps the floor plan readable after sunset
+while the background remains solar-driven. These settings apply only to that
+card instance and do not modify or duplicate the published Dashboard Scene.
 
 Lamp light cones keep their soft falloff at every shadow strength. The shadow
 slider controls general room shadows independently of lamp illumination.
@@ -97,15 +101,16 @@ without a separate fade.
 
 ## Updating an existing installation
 
-Update to **v0.9.0** in HACS and restart Home Assistant. Existing Config Entries,
+Update to **v0.10.0** in HACS and restart Home Assistant. Existing Config Entries,
 published scenes, bindings and unrelated Lovelace card settings are retained.
 Hard-refresh the dashboard once so it loads the new frontend bundle. When an
 administrator deletes the Scene selected by the currently edited card, the
 editor clears obsolete selections and immediately offers the remaining Scenes.
 The new presentation settings are optional and preserve existing card behavior
 unless changed. Existing scenes require no migration or card recreation.
-Republish from a compatible Mikonus version only to add the authored house
-location and geographic north used by the new solar calculation.
+No Scene republish, Config Entry migration or card recreation is required. The
+dynamic wall cutaway is disabled by default, so existing cards keep their prior
+appearance until it is enabled explicitly.
 
 Only installations upgraded from 0.2.0 that still have the old manually added
 Mikonus Lovelace resource should remove it

@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.10.0 Beta
+
+- Add a 2D/3D presentation toggle to every dashboard card through the public API
+  of the canonical shared renderer.
+- Keep the active floor and the single mounted viewer while switching between
+  perspective 3D and a top-down orthographic floor plan.
+- Support zoom, pan and in-plane rotation in 2D, and remember each card's mode
+  locally across dashboard reloads.
+- Add an optional camera-dependent wall cutaway to the card editor. It remains
+  disabled by default, preserving existing card appearance.
+- Preserve the provider-neutral Dashboard Scene, Home Assistant adapter boundary,
+  render-on-demand lifecycle and all existing scenes, bindings and card settings.
+
+Update to **v0.10.0** in HACS, restart Home Assistant and hard-refresh the
+dashboard once. No Scene republish, Config Entry migration or card recreation is
+required.
+
 ## 0.9.0 Beta
 
 - Accept the provider-neutral house latitude, longitude and geographic north
